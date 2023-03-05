@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1028304111781",
+    "firebase_url": "https://betaai-f9344-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "betaai-f9344",
+    "storage_bucket": "betaai-f9344.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1028304111781:android:897f2acc8bd8ffce82654c",
+        "android_client_info": {
+          "package_name": "com.example.newapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1028304111781-dm8rposkv92ei7mtlltcnbqui6qhq3qf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByLBl17C5qXq5u8PEoEoXWSklWATSyZT8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1028304111781-dm8rposkv92ei7mtlltcnbqui6qhq3qf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
