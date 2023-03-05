@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 // import your image asset here
@@ -20,7 +20,12 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.white,
       centerTitle: false,
-      title: Text(title, style: TextStyle(color: Colors.black)),
+      elevation: 1,
+      title: Padding(
+        padding: EdgeInsets.only(left: 16.0),
+        child: Text(title,
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black)),
+      ),
     );
   }
 
@@ -48,44 +53,174 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
 class IntroductionPage extends StatelessWidget {
   const IntroductionPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(title: 'Tattoist AI'),
-      body: Container(
-        //color: Colors.blue,
-        child: Center(
-          child: Text(
-            'Welcome to My Tattoo Design App!',
-            style: TextStyle(
-              fontSize: 24.0,
-              color: Colors.grey,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => MyHomePage(title: 'Creating a Tattoo Design')),
+      appBar: MyAppBar(title: 'Tattoo Genie'),
+      body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+          if (constraints.maxWidth < 800) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: Image.asset(
+                      'assets/images/main.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 40.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 32.0),
+                        Text(
+                          'AI Tattoo Generation',
+                          style: TextStyle(
+                            fontSize: 60.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 16.0),
+                        Text(
+                          'AI로 원하는 타투 도안을 제작해보세요.',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        SizedBox(height: 32.0),
+                        Text(
+                          '만들고 싶은 타투 도안이 있는데 그림 실력 때문에 망설여지신다구요? 타투 지니로 손쉽게 도안을 제작해보세요. 입력한 키워드와 스타일에 맞춰서 20개 이상의 도안을 제공해드립니다.',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                        SizedBox(height: 32),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      MyHomePage(title: 'My App')),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.black,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: Text(
+                              '타투 도안 제작하러 가기',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             );
-          },
-          child: Text('Get Started'),
-        ),
+          } else {
+            return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 40.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'AI Tattoo Generation',
+                            style: TextStyle(
+                              fontSize: 60.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 16.0),
+                          Text(
+                            'AI로 원하는 타투 도안을 제작해보세요.',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          SizedBox(height: 32.0),
+                          Text(
+                            '만들고 싶은 타투 도안이 있는데 그림 실력 때문에 망설여지신다구요? 타투 지니로 손쉽게 도안을 제작해보세요. 입력한 키워드와 스타일에 맞춰서 20개 이상의 도안을 제공해드립니다.',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          SizedBox(height: 32),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        MyHomePage(title: 'My App')),
+                              );
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 24, vertical: 12),
+                              decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(100),
+                              ),
+                              child: Text(
+                                '타투 도안 제작하러 가기',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        //height: 200.0,
+                        child: Image.asset(
+                          'assets/images/main.png',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+          }
+        },
       ),
     );
   }
 }
-
-
-
-   
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
@@ -113,7 +248,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(title: 'Tattoist AI'),
+      appBar: MyAppBar(title: 'Tattoo Genie'),
       body: SingleChildScrollView(
         child: Center(
           child: Container(

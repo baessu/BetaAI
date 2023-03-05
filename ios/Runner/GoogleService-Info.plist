@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1028304111781-a89nhg75fsugalqccle336m6864glvio.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1028304111781-a89nhg75fsugalqccle336m6864glvio</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDc66o4rO5muodqUqvB3odBzDeus0XThAg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1028304111781</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.newapp</string>
+	<key>PROJECT_ID</key>
+	<string>betaai-f9344</string>
+	<key>STORAGE_BUCKET</key>
+	<string>betaai-f9344.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1028304111781:ios:1f2b18dd03d7e67282654c</string>
+	<key>DATABASE_URL</key>
+	<string>https://betaai-f9344-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+</dict>
+</plist>
