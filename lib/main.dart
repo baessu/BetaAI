@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
+
 //import 'package:flutter/widgets.dart';
 
 // import your image asset here
 //import 'assets/images/blackngrey.png';
 int? _selectedTattooStyleIndex;
-
-void main() {
-  runApp(MyApp());
-}
 
 class TattooStyle {
   final String name;

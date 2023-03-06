@@ -1,0 +1,27 @@
+{
+  "name": "tattoogenie",
+  "version": "1.0.0",
+  "description": "BetaAI tattoogenie",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "flutter build web"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/baessu/BetaAI.git"
+  },
+  "author": "baessu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/baessu/BetaAI/issues"
+  },
+  "homepage": "https://github.com/baessu/BetaAI#readme",
+  "dependencies": {
+    "firebase": "^9.17.2"
+  }
+}
