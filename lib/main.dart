@@ -40,7 +40,7 @@ Future<Image> generateTattooDesign(
   String colorMode = blackAndWhiteSelected ? "black_and_white" : "color";
 
   String url =
-      "http://34.202.158.110:8000/generate/?prompt=sheet for tattoo%20$prompt&seed=$seed&steps=$steps&cfg_scale=$cfgScale&width=$width&height=$height&samples=$samples&color_mode=$colorMode";
+      "http://34.202.158.110:8000/generate/?prompt=sheetfortattoo%20$prompt&seed=$seed&steps=$steps&cfg_scale=$cfgScale&width=$width&height=$height&samples=$samples&color_mode=$colorMode";
 
   http.Response response = await http.get(Uri.parse(url));
 

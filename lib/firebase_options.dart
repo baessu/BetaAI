@@ -54,11 +54,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDiFgjTifWZZnO6b26585UOGgZAy1zx-qU',
-    appId: '1:1006279796555:web:4ee28aefe0fb74dc5e6ace',
+    appId: '1:1006279796555:web:cbfef4000f57f7fa5e6ace',
     messagingSenderId: '1006279796555',
     projectId: 'tattoogenie-72dca',
     authDomain: 'tattoogenie-72dca.firebaseapp.com',
     storageBucket: 'tattoogenie-72dca.appspot.com',
-    measurementId: 'G-SX26LZYGL1',
+    measurementId: 'G-BC509XPRHY',
   );
 }
