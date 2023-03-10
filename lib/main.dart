@@ -1,20 +1,59 @@
+import 'dart:math';
+import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+
 
 import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+bool _isLoading = false;
+Image? _finalImage;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+   await Firebase.initializeApp(
+   options: DefaultFirebaseOptions.currentPlatform,
+ );
   runApp(MyApp());
 }
 
-//import 'package:flutter/widgets.dart';
+Future<Image> generateTattooDesign(
+  String designDescription,
+  String tattooStyle,
+  bool blackAndWhiteSelected,
+  String artStyleInput,
+) async {
+  String prompt = '$designDescription %20$tattooStyle%20$artStyleInput';
+  String seed = Random().nextInt(1000000000).toString();
+  String steps = "30";
+  String cfgScale = "8.0";
+  String width = "512";
+  String height = "512";
+  String samples = "1";
+  String colorMode = blackAndWhiteSelected ? "black_and_white" : "color";
 
-// import your image asset here
-//import 'assets/images/blackngrey.png';
-int? _selectedTattooStyleIndex;
+  String url =
+      "http://34.202.158.110:8000/generate/?prompt=sheet for tattoo%20$prompt&seed=$seed&steps=$steps&cfg_scale=$cfgScale&width=$width&height=$height&samples=$samples&color_mode=$colorMode";
+
+  http.Response response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    List<dynamic> res = jsonDecode(response.body);
+    Uint8List bytes = base64.decode(res.first);
+    return Image.memory(bytes, fit: BoxFit.contain);
+  } else {
+    throw Exception('Failed to generate tattoo design.');
+  }
+}
+
+int _selectedTattooStyleIndex = 0;
 
 class TattooStyle {
   final String name;
@@ -24,16 +63,16 @@ class TattooStyle {
 }
 
 final _tattooStyles = [
-  TattooStyle('올드스쿨 타투', 'assets/images/oldschool.png'),
-  TattooStyle('뉴스쿨 타투', 'assets/images/newschool.png'),
-  TattooStyle('미니 타투', 'assets/images/mini.png'),
-  TattooStyle('낙서 타투', 'assets/images/doodle.png'),
-  TattooStyle('레터링 타투', 'assets/images/lettering.png'),
-  TattooStyle('트라이벌 타투', 'assets/images/tribal.png'),
-  TattooStyle('감성 타투', 'assets/images/gamsung.png'),
-  TattooStyle('이레즈미 타투', 'assets/images/irezmi.png'),
-  TattooStyle('라인워크 타투', 'assets/images/line.png'),
-  TattooStyle('블랙앤 그레이 타투', 'assets/images/blackngrey.png'),
+  TattooStyle('old school tattoo', 'assets/images/oldschool.png'),
+  TattooStyle('new school tattoo', 'assets/images/newschool.png'),
+  TattooStyle('little and minimal tattoo', 'assets/images/mini.png'),
+  TattooStyle('cute and funny tattoo', 'assets/images/doodle.png'),
+  TattooStyle('lettering tattoo', 'assets/images/lettering.png'),
+  TattooStyle('Tribal tattoo', 'assets/images/tribal.png'),
+  TattooStyle('watercolor tattoo', 'assets/images/gamsung.png'),
+  TattooStyle('Irezumi tattoo', 'assets/images/irezmi.png'),
+  TattooStyle('line work tattoo', 'assets/images/line.png'),
+  TattooStyle('Black and gray tattoo', 'assets/images/blackngrey.png'),
 ];
 
 class MyAppBar extends StatelessWidget with PreferredSizeWidget {
@@ -256,6 +295,59 @@ class IntroductionPage extends StatelessWidget {
   }
 }
 
+class LoadingPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: MyAppBar(title: 'Tattoo Genie'),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            //CircularProgressIndicator(),
+            LoadingAnimationWidget.inkDrop(
+              color: Colors.black, 
+              size: 50,
+            ),
+            SizedBox(height: 24.0),
+            Text('AI가 타투도안을 생성하고 있습니다. \n 이 페이지를 벗어나지 마세요.',textAlign: TextAlign.center),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ResultPage extends StatelessWidget {
+  final List<Image> images;
+
+  ResultPage(this.images);
+  
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: MyAppBar(title: 'Tattoo Genie'),
+      body: Padding(
+        padding: EdgeInsets.all(24.0),
+        child: Center(
+          child: GridView.count(
+            crossAxisCount: 3,
+            mainAxisSpacing: 16.0,
+            crossAxisSpacing: 16.0,
+            children: List.generate(images.length, (index) {
+              return ClipRRect(
+                borderRadius: BorderRadius.circular(13.0),
+                child: images[index],
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -271,12 +363,45 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _blackAndWhiteSelected = true;
   String _artStyleInput = '';
 
-  void _createTattooDesign() {
-    print('Design Description: $_designDescription');
-    print('Tattoo Style Selections: $_tattooStyleSelections');
-    print(
-        'Color Selection: ${_blackAndWhiteSelected ? 'Black & White' : 'Color'}');
-    print('Art Style Input: $_artStyleInput');
+  void _createTattooDesign() async {
+    // Navigate to the loading page
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => LoadingPage()));
+
+    // Generate the images
+    final images = await Future.wait([
+      generateTattooDesign(
+          _designDescription,
+          _tattooStyles[_selectedTattooStyleIndex].name as String,
+          _blackAndWhiteSelected as bool,
+          _artStyleInput as String),
+      generateTattooDesign(
+          _designDescription,
+          _tattooStyles[_selectedTattooStyleIndex + 1].name as String,
+          _blackAndWhiteSelected as bool,
+          _artStyleInput as String),
+      generateTattooDesign(
+          _designDescription,
+          _tattooStyles[_selectedTattooStyleIndex + 2].name as String,
+          _blackAndWhiteSelected as bool,
+          _artStyleInput as String),
+      generateTattooDesign(
+          _designDescription,
+          _tattooStyles[_selectedTattooStyleIndex + 3].name as String,
+          _blackAndWhiteSelected as bool,
+          _artStyleInput as String),
+      generateTattooDesign(
+          _designDescription,
+          _tattooStyles[_selectedTattooStyleIndex + 4].name as String,
+          _blackAndWhiteSelected as bool,
+          _artStyleInput as String),
+    ]);
+
+    // Navigate to the result page
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => ResultPage(images as List<Image>)),
+    );
   }
 
   @override
@@ -385,6 +510,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               _tattooStyles.length,
                               (index) {
                                 final style = _tattooStyles[index];
+
                                 return SizedBox(
                                   width: (maxWidth -
                                           (itemCountPerRow + 1) * spacing) /
